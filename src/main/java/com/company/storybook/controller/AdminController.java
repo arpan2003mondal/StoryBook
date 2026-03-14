@@ -29,4 +29,14 @@ public class AdminController {
         StorybookResponse response = adminService.addStorybook(storybookRequest);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> adminLogout(@RequestHeader("Authorization") String authHeader) throws StoryBookException {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            throw new StoryBookException("user.logout.invalid.token");
+        }
+        String token = authHeader.substring(7);
+        String message = adminService.logout(token);
+        return new ResponseEntity<>(message, HttpStatus.OK);
+    }
 }

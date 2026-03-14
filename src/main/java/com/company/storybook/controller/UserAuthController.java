@@ -3,7 +3,7 @@ package com.company.storybook.controller;
 import com.company.storybook.dto.RegisterRequest;
 import com.company.storybook.dto.LoginRequest;
 import com.company.storybook.exception.StoryBookException;
-import com.company.storybook.service.AuthService;
+import com.company.storybook.service.UserAuthService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserAuthController {
 
     @Autowired
-    private AuthService authService;
+    private UserAuthService authService;
 
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@Valid @RequestBody RegisterRequest registerRequest) throws StoryBookException {

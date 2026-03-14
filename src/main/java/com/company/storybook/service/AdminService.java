@@ -10,4 +10,6 @@ public interface AdminService {
     String adminLogin(LoginRequest loginRequest) throws StoryBookException;
 
     StorybookResponse addStorybook(StorybookRequest storybookRequest) throws StoryBookException;
+
+    String logout(String token);
 }

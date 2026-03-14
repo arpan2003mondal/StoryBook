@@ -1,0 +1,465 @@
+{
+  "info": {
+    "name": "StoryBook API",
+    "description": "Complete API test collection for StoryBook Backend",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:1234",
+      "type": "string"
+    },
+    {
+      "key": "userToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "adminToken",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    pm.test(\"Registration successful\", function () {",
+                  "        pm.expect(pm.response.code).to.equal(201);",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Alice Cooper\",\n  \"email\": \"alice@example.com\",\n  \"password\": \"Password@123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "register"]
+            }
+          }
+        },
+        {
+          "name": "User Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var token = pm.response.text().trim();",
+                  "    pm.collectionVariables.set(\"userToken\", token);",
+                  "    pm.test(\"Login successful and token saved\", function () {",
+                  "        pm.expect(pm.response.code).to.equal(200);",
+                  "        pm.expect(token).to.be.ok;",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@storybook.com\",\n  \"password\": \"User@123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "login"]
+            }
+          }
+        },
+        {
+          "name": "Admin Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var token = pm.response.text().trim();",
+                  "    pm.collectionVariables.set(\"adminToken\", token);",
+                  "    pm.test(\"Admin login successful and token saved\", function () {",
+                  "        pm.expect(pm.response.code).to.equal(200);",
+                  "        pm.expect(token).to.be.ok;",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@storybook.com\",\n  \"password\": \"Admin@123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "login"]
+            }
+          }
+        },
+        {
+          "name": "User Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "logout"]
+            }
+          }
+        },
+        {
+          "name": "Admin Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "logout"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Storybooks Management",
+      "item": [
+        {
+          "name": "Get All Storybooks",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/storybooks",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "storybooks"]
+            }
+          }
+        },
+        {
+          "name": "Search Storybooks",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/storybooks/search?keyword=Harry",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "storybooks", "search"],
+              "query": [
+                {
+                  "key": "keyword",
+                  "value": "Harry"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Storybook by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/storybooks/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "storybooks", "1"]
+            }
+          }
+        },
+        {
+          "name": "Add Storybook (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"The Hobbit\",\n  \"description\": \"A fantasy adventure about a small hobbit's unexpected journey\",\n  \"authorId\": 4,\n  \"categoryId\": 1,\n  \"price\": 8.99,\n  \"audioUrl\": \"https://archive.org/download/hobbit_librivox/hobbit_64kb.m4b\",\n  \"coverImageUrl\": \"https://images.unsplash.com/photo-1507842217343-583f20270319?w=400&h=600&fit=crop\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/storybooks",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "storybooks"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Shopping Cart",
+      "item": [
+        {
+          "name": "Add to Cart",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    pm.test(\"Item added to cart successfully\", function () {",
+                  "        pm.expect(pm.response.code).to.equal(201);",
+                  "        var responseJson = pm.response.json();",
+                  "        pm.expect(responseJson).to.have.property('cart');",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"storybookId\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/storybooks/cart/add",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "storybooks", "cart", "add"]
+            }
+          }
+        },
+        {
+          "name": "Add Multiple Items to Cart (Item 2)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"storybookId\": 2\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/storybooks/cart/add",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "storybooks", "cart", "add"]
+            }
+          }
+        },
+        {
+          "name": "Add Multiple Items to Cart (Item 3)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"storybookId\": 3\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/storybooks/cart/add",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "storybooks", "cart", "add"]
+            }
+          }
+        },
+        {
+          "name": "Get Cart",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/storybooks/cart",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "storybooks", "cart"]
+            }
+          }
+        },
+        {
+          "name": "Remove Item from Cart",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/storybooks/cart/items/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "storybooks", "cart", "items", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Wallet & Orders",
+      "item": [
+        {
+          "name": "Get Wallet Balance",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/wallet/balance",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "wallet", "balance"]
+            }
+          }
+        },
+        {
+          "name": "Checkout (Create Order)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    pm.test(\"Checkout successful and order created\", function () {",
+                  "        pm.expect(pm.response.code).to.equal(201);",
+                  "        var responseJson = pm.response.json();",
+                  "        pm.expect(responseJson).to.have.property('order');",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/wallet/checkout",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "wallet", "checkout"]
+            }
+          }
+        },
+        {
+          "name": "Get User Library",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/wallet/library",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "wallet", "library"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -15,9 +15,13 @@ import com.company.storybook.repository.StorybookRepository;
 import com.company.storybook.repository.UserRepository;
 import com.company.storybook.utility.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import com.company.storybook.service.TokenBlacklistService;
+import org.springframework.context.MessageSource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Locale;
 
 @Service
 public class AdminServiceImpl implements AdminService {
@@ -32,6 +36,9 @@ public class AdminServiceImpl implements AdminService {
     private JwtUtil jwtUtil;
 
     @Autowired
+    private TokenBlacklistService tokenBlacklistService;
+
+    @Autowired
     private AuthorRepository authorRepository;
 
     @Autowired
@@ -39,6 +46,9 @@ public class AdminServiceImpl implements AdminService {
 
     @Autowired
     private StorybookRepository storybookRepository;
+
+    @Autowired
+    private MessageSource messageSource;
 
     @Override
     public String adminLogin(LoginRequest loginRequest) throws StoryBookException {
@@ -54,6 +64,12 @@ public class AdminServiceImpl implements AdminService {
         }
 
         return jwtUtil.generateToken(user.getEmail(), user.getRole().name());
+    }
+
+    @Override
+    public String logout(String token) {
+        tokenBlacklistService.blacklist(token);
+        return messageSource.getMessage("admin.logout.success", null, Locale.ENGLISH);
     }
 
     @Override

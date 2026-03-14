@@ -22,7 +22,7 @@ import java.util.Locale;
 import java.util.Optional;
 
 @Service(value = "authService")
-public class AuthServiceImpl implements AuthService {
+public class UserAuthServiceImpl implements UserAuthService {
 
     @Autowired
     private UserRepository userRepository;
@@ -78,7 +78,7 @@ public class AuthServiceImpl implements AuthService {
         cart.setUpdatedAt(LocalDateTime.now());
         cartRepository.save(cart);
 
-        return "User Registration Successfull";
+        return messageSource.getMessage("user.registration.success", null, Locale.ENGLISH);
     }
 
     @Override

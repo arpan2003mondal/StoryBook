@@ -13,6 +13,7 @@ import com.company.storybook.repository.CartItemRepository;
 import com.company.storybook.repository.CartRepository;
 import com.company.storybook.repository.StorybookRepository;
 import com.company.storybook.repository.UserRepository;
+import com.company.storybook.repository.UserLibraryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +38,9 @@ public class CartServiceImpl implements CartService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserLibraryRepository userLibraryRepository;
 
     @Override
     public List<StorybookResponse> getAllStorybooks() {
@@ -72,6 +76,11 @@ public class CartServiceImpl implements CartService {
         // Verify storybook exists
         Storybook storybook = storybookRepository.findById(request.getStorybookId())
                 .orElseThrow(() -> new StoryBookException("storybook.not.found"));
+
+        // Check if storybook is already purchased (in user library)
+        if (userLibraryRepository.existsByUserIdAndStorybookId(userId, request.getStorybookId())) {
+            throw new StoryBookException("cart.item.already.purchased");
+        }
 
         // Get or create cart for user
         Cart cart = cartRepository.findByUserId(userId)
@@ -124,7 +133,11 @@ public class CartServiceImpl implements CartService {
         cart.setUpdatedAt(LocalDateTime.now());
         cartRepository.save(cart);
 
-        return buildCartResponse(cart);
+        // Reload cart from database to get updated cartItems list
+        Cart updatedCart = cartRepository.findByUserId(userId)
+                .orElseThrow(() -> new StoryBookException("cart.not.found"));
+        
+        return buildCartResponse(updatedCart);
     }
 
     @Override
