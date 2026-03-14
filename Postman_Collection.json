@@ -460,6 +460,376 @@
           }
         }
       ]
+    },
+    {
+      "name": "Admin - Authors Management",
+      "item": [
+        {
+          "name": "Add Author",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    pm.test(\"Author created successfully\", function () {",
+                  "        pm.expect(pm.response.code).to.equal(201);",
+                  "        var responseJson = pm.response.json();",
+                  "        pm.expect(responseJson).to.have.property('id');",
+                  "        pm.expect(responseJson).to.have.property('name');",
+                  "    });",
+                  "    pm.collectionVariables.set(\"authorId\", pm.response.json().id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"J.K. Rowling\",\n  \"bio\": \"British author known for the Harry Potter series\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/authors",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "authors"]
+            }
+          }
+        },
+        {
+          "name": "Update Author",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    pm.test(\"Author updated successfully\", function () {",
+                  "        pm.expect(pm.response.code).to.equal(200);",
+                  "        var responseJson = pm.response.json();",
+                  "        pm.expect(responseJson).to.have.property('name');",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"J.K. Rowling\",\n  \"bio\": \"British author, creator of the magical world of Harry Potter\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/authors/5",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "authors", "5"]
+            }
+          }
+        },
+        {
+          "name": "Delete Author",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    pm.test(\"Author deleted successfully\", function () {",
+                  "        pm.expect(pm.response.code).to.equal(200);",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/authors/5",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "authors", "5"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin - Categories Management",
+      "item": [
+        {
+          "name": "Add Category",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    pm.test(\"Category created successfully\", function () {",
+                  "        pm.expect(pm.response.code).to.equal(201);",
+                  "        var responseJson = pm.response.json();",
+                  "        pm.expect(responseJson).to.have.property('id');",
+                  "        pm.expect(responseJson).to.have.property('name');",
+                  "    });",
+                  "    pm.collectionVariables.set(\"categoryId\", pm.response.json().id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Science Fiction\",\n  \"description\": \"Stories set in imaginary futuristic or alternative worlds\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/categories",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "categories"]
+            }
+          }
+        },
+        {
+          "name": "Update Category",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    pm.test(\"Category updated successfully\", function () {",
+                  "        pm.expect(pm.response.code).to.equal(200);",
+                  "        var responseJson = pm.response.json();",
+                  "        pm.expect(responseJson).to.have.property('name');",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Science Fiction & Fantasy\",\n  \"description\": \"Stories featuring futuristic worlds, magic, and imaginative worlds\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/categories/4",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "categories", "4"]
+            }
+          }
+        },
+        {
+          "name": "Delete Category",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    pm.test(\"Category deleted successfully\", function () {",
+                  "        pm.expect(pm.response.code).to.equal(200);",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/categories/4",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "categories", "4"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin - Storybook Price Management",
+      "item": [
+        {
+          "name": "Update Storybook Price",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    pm.test(\"Storybook price updated successfully\", function () {",
+                  "        pm.expect(pm.response.code).to.equal(200);",
+                  "        var responseJson = pm.response.json();",
+                  "        pm.expect(responseJson).to.have.property('price');",
+                  "        pm.expect(responseJson.price).to.equal(12.99);",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"price\": 12.99\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/storybooks/1/price",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "storybooks", "1", "price"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "User - Account Management",
+      "item": [
+        {
+          "name": "Change Password",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    pm.test(\"Password changed successfully\", function () {",
+                  "        pm.expect(pm.response.code).to.equal(200);",
+                  "        var responseText = pm.response.text();",
+                  "        pm.expect(responseText).to.be.ok;",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"oldPassword\": \"User@123\",\n  \"newPassword\": \"NewPassword@456\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/change-password",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "change-password"]
+            }
+          }
+        },
+        {
+          "name": "Change Password - Invalid Old Password",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Invalid old password returns 400\", function () {",
+                  "    pm.expect(pm.response.code).to.equal(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"oldPassword\": \"WrongPassword@123\",\n  \"newPassword\": \"NewPassword@456\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/change-password",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "change-password"]
+            }
+          }
+        }
+      ]
     }
   ]
 }

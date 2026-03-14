@@ -38,7 +38,14 @@ A comprehensive Spring Boot backend application for an audio storybook platform 
 - ✅ Admin login with role verification
 - ✅ Add new storybooks to catalog
 - ✅ Manage author and category information
+- ✅ Add, update, delete authors
+- ✅ Add, update, delete categories
+- ✅ Update storybook prices
 - ✅ Admin logout
+
+### User Account Management
+- ✅ Change password with old password validation
+- ✅ Secure password hashing
 
 ### Security
 - ✅ JWT Token authentication
@@ -297,6 +304,81 @@ GET /api/wallet/library
 Authorization: Bearer <userToken>
 ```
 
+### Admin Management Endpoints
+
+#### Manage Authors
+```http
+POST /admin/authors
+Authorization: Bearer <adminToken>
+Content-Type: application/json
+
+{
+  "name": "Isaac Asimov",
+  "bio": "American writer and biochemist"
+}
+
+PUT /admin/authors/{authorId}
+Authorization: Bearer <adminToken>
+Content-Type: application/json
+
+{
+  "name": "Updated Name",
+  "bio": "Updated bio"
+}
+
+DELETE /admin/authors/{authorId}
+Authorization: Bearer <adminToken>
+```
+
+#### Manage Categories
+```http
+POST /admin/categories
+Authorization: Bearer <adminToken>
+Content-Type: application/json
+
+{
+  "name": "Science Fiction",
+  "description": "Sci-fi stories"
+}
+
+PUT /admin/categories/{categoryId}
+Authorization: Bearer <adminToken>
+Content-Type: application/json
+
+{
+  "name": "Updated Name",
+  "description": "Updated description"
+}
+
+DELETE /admin/categories/{categoryId}
+Authorization: Bearer <adminToken>
+```
+
+#### Update Storybook Price
+```http
+PUT /admin/storybooks/{storybookId}/price
+Authorization: Bearer <adminToken>
+Content-Type: application/json
+
+{
+  "price": 9.99
+}
+```
+
+### User Account Management
+
+#### Change Password
+```http
+POST /users/change-password
+Authorization: Bearer <userToken>
+Content-Type: application/json
+
+{
+  "oldPassword": "CurrentPassword@123",
+  "newPassword": "NewPassword@456"
+}
+```
+
 ## 📊 Database Schema
 
 ### Users Table
@@ -521,12 +603,16 @@ Common error codes:
 ## 🚦 Current Status
 
 - ✅ User Authentication & Authorization
+- ✅ User Password Change with Validation
 - ✅ Storybook Management
 - ✅ Shopping Cart Functionality
 - ✅ Wallet Management
 - ✅ Order Management
 - ✅ User Library
 - ✅ Admin Panel
+- ✅ Admin Author Management (Create, Update, Delete)
+- ✅ Admin Category Management (Create, Update, Delete)
+- ✅ Admin Storybook Price Updates
 - ⏳ Payment Gateway Integration
 - ⏳ Reviews & Ratings
 - ⏳ Wishlist Feature

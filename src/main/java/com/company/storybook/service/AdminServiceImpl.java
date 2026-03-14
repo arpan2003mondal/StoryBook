@@ -3,6 +3,9 @@ package com.company.storybook.service;
 import com.company.storybook.dto.LoginRequest;
 import com.company.storybook.dto.StorybookRequest;
 import com.company.storybook.dto.StorybookResponse;
+import com.company.storybook.dto.AuthorRequest;
+import com.company.storybook.dto.CategoryRequest;
+import com.company.storybook.dto.UpdatePriceRequest;
 import com.company.storybook.entity.Author;
 import com.company.storybook.entity.Category;
 import com.company.storybook.entity.Role;
@@ -94,6 +97,86 @@ public class AdminServiceImpl implements AdminService {
         return toResponse(saved);
     }
 
+    @Override
+    @Transactional
+    public StorybookResponse updateStorybookPrice(Long storybookId, UpdatePriceRequest request) throws StoryBookException {
+        Storybook storybook = storybookRepository.findById(storybookId)
+                .orElseThrow(() -> new StoryBookException("storybook.not.found"));
+
+        storybook.setPrice(request.getPrice());
+        Storybook updated = storybookRepository.save(storybook);
+        return toResponse(updated);
+    }
+
+    @Override
+    @Transactional
+    public Object addAuthor(AuthorRequest authorRequest) throws StoryBookException {
+        Author author = new Author();
+        author.setName(authorRequest.getName());
+        author.setBio(authorRequest.getBio());
+        
+        Author saved = authorRepository.save(author);
+        
+        return mapAuthorToDTO(saved);
+    }
+
+    @Override
+    @Transactional
+    public Object updateAuthor(Long authorId, AuthorRequest authorRequest) throws StoryBookException {
+        Author author = authorRepository.findById(authorId)
+                .orElseThrow(() -> new StoryBookException("author.not.found"));
+
+        author.setName(authorRequest.getName());
+        author.setBio(authorRequest.getBio());
+        
+        Author updated = authorRepository.save(author);
+        return mapAuthorToDTO(updated);
+    }
+
+    @Override
+    @Transactional
+    public String deleteAuthor(Long authorId) throws StoryBookException {
+        Author author = authorRepository.findById(authorId)
+                .orElseThrow(() -> new StoryBookException("author.not.found"));
+
+        authorRepository.delete(author);
+        return messageSource.getMessage("author.deleted.success", null, Locale.ENGLISH);
+    }
+
+    @Override
+    @Transactional
+    public Object addCategory(CategoryRequest categoryRequest) throws StoryBookException {
+        Category category = new Category();
+        category.setName(categoryRequest.getName());
+        category.setDescription(categoryRequest.getDescription());
+        
+        Category saved = categoryRepository.save(category);
+        return mapCategoryToDTO(saved);
+    }
+
+    @Override
+    @Transactional
+    public Object updateCategory(Long categoryId, CategoryRequest categoryRequest) throws StoryBookException {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new StoryBookException("category.not.found"));
+
+        category.setName(categoryRequest.getName());
+        category.setDescription(categoryRequest.getDescription());
+        
+        Category updated = categoryRepository.save(category);
+        return mapCategoryToDTO(updated);
+    }
+
+    @Override
+    @Transactional
+    public String deleteCategory(Long categoryId) throws StoryBookException {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new StoryBookException("category.not.found"));
+
+        categoryRepository.delete(category);
+        return messageSource.getMessage("category.deleted.success", null, Locale.ENGLISH);
+    }
+
     private StorybookResponse toResponse(Storybook storybook) {
         StorybookResponse response = new StorybookResponse();
         response.setId(storybook.getId());
@@ -108,5 +191,19 @@ public class AdminServiceImpl implements AdminService {
         response.setCoverImageUrl(storybook.getCoverImageUrl());
         response.setCreatedAt(storybook.getCreatedAt());
         return response;
+    }
+
+    private Object mapAuthorToDTO(Author author) {
+        return new com.company.storybook.dto.AuthorRequest() {{
+            setName(author.getName());
+            setBio(author.getBio());
+        }};
+    }
+
+    private Object mapCategoryToDTO(Category category) {
+        return new com.company.storybook.dto.CategoryRequest() {{
+            setName(category.getName());
+            setDescription(category.getDescription());
+        }};
     }
 }

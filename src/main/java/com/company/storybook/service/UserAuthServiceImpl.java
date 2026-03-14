@@ -2,6 +2,7 @@ package com.company.storybook.service;
 
 import com.company.storybook.dto.RegisterRequest;
 import com.company.storybook.dto.LoginRequest;
+import com.company.storybook.dto.ChangePasswordRequest;
 import com.company.storybook.entity.User;
 import com.company.storybook.entity.Wallet;
 import com.company.storybook.entity.Cart;
@@ -100,5 +101,24 @@ public class UserAuthServiceImpl implements UserAuthService {
     public String logout(String token) {
         tokenBlacklistService.blacklist(token);
         return messageSource.getMessage("user.logout.success", null, Locale.ENGLISH);
+    }
+
+    @Override
+    @Transactional
+    public String changePassword(Long userId, ChangePasswordRequest request) throws StoryBookException {
+        // Verify user exists
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new StoryBookException("user.not.found"));
+
+        // Verify old password is correct
+        if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
+            throw new StoryBookException("user.password.invalid");
+        }
+
+        // Encode new password and update
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+
+        return messageSource.getMessage("user.password.change.success", null, Locale.ENGLISH);
     }
 }
